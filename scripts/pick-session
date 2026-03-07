@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+
+sessions="$(tmux-archive-sessions list)"
+
+if [[ "$1" == "--active" ]]; then
+	sessions="$(grep -v '(ARCHIVED)' <<< "$sessions" )"
+fi
+
+
+got=$(sk <<< "$sessions")
+
+if [[ -z "$got" ]]; then exit; fi
+
+
+name=$(awk '{print $1}' <<< "$got")
+archived=$(awk '{print $2}' <<< "$got")
+
+if [[ $archived == "(ARCHIVED)" ]]; then
+	tmux-archive-sessions restore "$name"
+	tmux switch -t "$name"
+else
+	tmux switch -t "$name"
+fi
+

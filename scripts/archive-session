@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]; then
+	target="$(tmux display-message -p '#S')"
+else
+	target="$1"
+fi
+
+tmux-archive-sessions archive "$target"
