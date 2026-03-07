@@ -1,4 +1,4 @@
 ```tmux
-bind s display-popup -E "pick-session --active"
-bind S display-popup -E "pick-session"
+bind s display-popup -E pick-session --active
+bind S display-popup -E pick-session
 ```
