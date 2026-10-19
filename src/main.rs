@@ -18,7 +18,7 @@ enum Subcommand {
 
 fn session_name(line: &str) -> Option<&str> {
     let mut it = line.split_whitespace();
-    let _pane = it.next();
+    let _pane = it.next().filter(|&x| x == "pane")?;
     it.next()
 }
 
