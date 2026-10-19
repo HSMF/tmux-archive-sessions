@@ -18,8 +18,8 @@ archived=$(awk '{print $2}' <<< "$got")
 
 if [[ $archived == "(ARCHIVED)" ]]; then
 	tmux-archive-sessions restore "$name"
-	tmux switch -t "$name"
+	tmux switch-client -t "$name"
 else
-	tmux switch -t "$name"
+	tmux switch-client -t "$name"
 fi
 

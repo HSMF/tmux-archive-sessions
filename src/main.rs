@@ -102,7 +102,7 @@ fn main() -> anyhow::Result<()> {
             {
                 checked_run(
                     Command::new("tmux")
-                        .args(["switch", "-t"])
+                        .args(["switch-client", "-t"])
                         .arg(fallback_session),
                 )
                 .context("failed to switch session")?;
