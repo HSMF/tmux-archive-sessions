@@ -65,8 +65,8 @@ fn main() -> anyhow::Result<()> {
     let resurrect_file = home.join(".local/share/tmux/resurrect/last");
     let archive_file = home.join(".local/share/tmux/resurrect/archived");
 
-    let save = PathBuf::from(tmux_get_option("@resurrect-save-script-path")?);
-    let restore = PathBuf::from(tmux_get_option("@resurrect-restore-script-path")?);
+    let save = PathBuf::from(tmux_get_option("@resurrect-save-script-path")?.trim());
+    let restore = PathBuf::from(tmux_get_option("@resurrect-restore-script-path")?.trim());
 
     let active = std::fs::read(&resurrect_file)
         .ok()
@@ -80,7 +80,8 @@ fn main() -> anyhow::Result<()> {
 
     match app.subcommand {
         Subcommand::Archive { name } => {
-            checked_run(&mut Command::new(save)).context("failed to save session")?;
+            checked_run(&mut Command::new(&save))
+                .with_context(|| format!("failed to save session with {save:?}"))?;
 
             let (mut to_archive, keep) = get_entries_with_session_name(&active, &name);
             let fallback_session = keep.iter().copied().find_map(session_name);
