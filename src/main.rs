@@ -51,6 +51,13 @@ fn checked_run(c: &mut Command) -> anyhow::Result<String> {
     Ok(String::from_utf8(o.stdout)?)
 }
 
+fn tmux_get_option(opt: &str) -> anyhow::Result<String> {
+    let o = Command::new("tmux")
+        .args(["show-option", "-gqv", opt])
+        .output()?;
+    Ok(String::from_utf8(o.stdout)?)
+}
+
 fn main() -> anyhow::Result<()> {
     let app = App::parse();
 
@@ -58,8 +65,8 @@ fn main() -> anyhow::Result<()> {
     let resurrect_file = home.join(".local/share/tmux/resurrect/last");
     let archive_file = home.join(".local/share/tmux/resurrect/archived");
 
-    let save = home.join(".config/tmux/plugins/tmux-resurrect/scripts/save.sh");
-    let restore = home.join(".config/tmux/plugins/tmux-resurrect/scripts/restore.sh");
+    let save = PathBuf::from(tmux_get_option("@resurrect-save-script-path")?);
+    let restore = PathBuf::from(tmux_get_option("@resurrect-restore-script-path")?);
 
     let active = std::fs::read(&resurrect_file)
         .ok()
